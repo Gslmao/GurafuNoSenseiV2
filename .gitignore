@@ -1,0 +1,10 @@
+venv/
+__pycache__/
+*.pyc
+.env
+*.pkl
+*.dat
+*.zip
+config.json
+
+!Inter-4.0.zip
