@@ -1,6 +1,6 @@
-from mysql.connector import Error
+from config import db_host, db_port, db_user, db_password, db_logindb, db_userdata, path_files, path_appdata
 from tkinter import simpledialog, messagebox
-from dotenv import load_dotenv
+from mysql.connector import Error
 
 import json
 import matplotlib.pyplot as plt
@@ -8,22 +8,8 @@ import mysql.connector as msl
 import pickle
 import os
 
-load_dotenv()
-
-# Declare environment variables at the top
-db_host = os.getenv("MS_HOST")
-db_port = int(os.getenv("MS_PORT"))
-db_user = os.getenv("MS_USER")
-db_password = os.getenv("MS_PASSWORD")
-db_userdata = os.getenv("DB_USERDATA")
-db_logindb = os.getenv("DB_loginDB")
-
-file_path = os.getenv('FILES_PATH')
-appdata = os.getenv('APPDATA_PATH')
-
 with open('config.json', 'r') as f:
     config = json.load(f)
-
 
 def data_entry(filename: str):
     """
@@ -31,17 +17,11 @@ def data_entry(filename: str):
 
     :param filename: The name of the graph file to be saved.
     """
-    user_file_path = os.path.join(file_path, 'user_carryover.txt')
+    user_file_path = os.path.join(path_files, 'user_carryover.txt')
     with open(user_file_path, 'r') as file:
         user = file.read().strip()
 
-    sensei = msl.connect(
-        host=db_host,
-        port=db_port,
-        username=db_user,
-        password=db_password,
-        database=db_userdata
-    )
+    sensei  = msl.connect(host=db_host, port=db_port, username=db_user, password=db_password, database=db_logindb)
     entries = sensei.cursor()
 
     entries.execute(f"SELECT * FROM u_{user}")
@@ -81,11 +61,11 @@ def save_graph(chck, figure):
     :param chck: The base name for the saved files.
     :param figure: The matplotlib figure object to be saved.
     """
-    user_file_path = os.path.join(file_path, 'user_carryover.txt')
+    user_file_path = os.path.join(path_files, 'user_carryover.txt')
     with open(user_file_path, 'r') as file:
         user = file.read().strip()
 
-    dir = os.path.join(appdata, f"u_{user}")
+    dir = os.path.join(path_appdata, f"u_{user}")
     os.chdir(dir)
 
     pic_file = chck + '.png'
@@ -123,22 +103,16 @@ def export(user):
 
     import shutil
 
-    db_conn = msl.connect(
-        host=db_host,
-        port=db_port,
-        username=db_user,
-        password=db_password,
-        database=db_userdata
-    )
+    db_conn = msl.connect(host=db_host, port=db_port, username=db_user, password=db_password, database=db_logindb)
     db_cursor = db_conn.cursor()
 
-    outfile_path = os.path.join(appdata, f'u_{user}', f'{user}.csv')
+    outfile_path = os.path.join(path_appdata, f'u_{user}', f'{user}.csv')
     db_cursor.execute(
         f"""SELECT * FROM u_{user} INTO OUTFILE '{outfile_path}' 
             FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n';"""
     )
 
-    dest_foldr = os.path.join(appdata, f'u_{user}')
+    dest_foldr = os.path.join(path_appdata, f'u_{user}')
     create_zip(f'{user}.zip', dest_foldr)
 
     csv_file = os.path.join(dest_foldr, f'{user}.csv')
@@ -165,18 +139,12 @@ def clear(user):
             except Exception as e:
                 pass
 
-    db = msl.connect(
-        host=db_host,
-        port=db_port,
-        username=db_user,
-        password=db_password,
-        database=db_userdata
-    )
+    db = msl.connect(host=db_host, port=db_port, username=db_user, password=db_password, database=db_logindb)
     cursor = db.cursor()
 
     cursor.execute(f'truncate table u_{user}')
 
-    clear_directory(os.path.join(appdata, f'u_{user}'))
+    clear_directory(os.path.join(path_appdata, f'u_{user}'))
 
 def import_util(user):
     """
@@ -190,17 +158,11 @@ def import_util(user):
 
     zipfile_name = simpledialog.askstring('Input', 'Enter Name of the Zipfile.zip')
 
-    folder = os.path.join(appdata, f"u_{user}")
-    targ = os.path.join(appdata, zipfile_name)
+    folder = os.path.join(path_appdata, f"u_{user}")
+    targ = os.path.join(path_appdata, zipfile_name)
     table = f'u_{user}'
 
-    db = msl.connect(
-        host=db_host,
-        port=db_port,
-        username=db_user,
-        password=db_password,
-        database=db_userdata
-    )
+    db = msl.connect(host=db_host, port=db_port, username=db_user, password=db_password, database=db_logindb)
     cursor = db.cursor()
 
     os.makedirs(folder, exist_ok=True)
@@ -256,13 +218,7 @@ def check_data_consistency():
     No parameters.
     """
     try:
-        mydb = msl.connect(
-            host=db_host,
-            port=db_port,
-            username=db_user,
-            password=db_password,
-            database=db_logindb
-        )
+        mydb = msl.connect(host=db_host, port=db_port, username=db_user, password=db_password, database=db_logindb)
         if mydb.is_connected():
             cursor = mydb.cursor()
 
@@ -270,12 +226,12 @@ def check_data_consistency():
             account = cursor.fetchall()
             accounts_set = {i[0] for i in account}
 
-            folders_set = set(os.listdir(appdata))
+            folders_set = set(os.listdir(path_appdata))
 
             missing = accounts_set - folders_set
 
             for i in missing:
-                new_folder_path = os.path.join(appdata, i)
+                new_folder_path = os.path.join(path_appdata, i)
                 os.mkdir(new_folder_path)
     except Error as e:
         pass
@@ -284,5 +240,4 @@ def check_data_consistency():
         if mydb.is_connected():
             cursor.close()
             mydb.close()
-    db = msl.connect(host='localhost', username='root', password='DBroot1324*!', database='loginDB')
-
+        db = msl.connect(host=db_host, port=db_port, username=db_user, password=db_password, database=db_logindb)

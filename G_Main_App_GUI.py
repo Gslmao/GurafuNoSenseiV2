@@ -1,7 +1,7 @@
+from config import db_host, db_user, db_password, db_logindb, db_userdata, path_appdata, path_logo, path_userCarryover, path_myFile, path_figFile
 from matplotlib.backends.backend_tkagg import NavigationToolbar2Tk, FigureCanvasTkAgg
 from F_FuncLib import save_graph, export, clear, import_util
 from tkinter import ttk, font, simpledialog, messagebox
-from dotenv import load_dotenv
 from PIL import Image
 
 import mysql.connector as msl
@@ -12,16 +12,6 @@ import pickle
 import time
 import os
 import sys
-
-load_dotenv()
-
-# Declare database parameters at the top
-DB_HOST = os.getenv("MS_HOST")
-DB_PORT = int(os.getenv("MS_PORT"))
-DB_USER = os.getenv("MS_USER")
-DB_PASSWORD = os.getenv("MS_PASSWORD")
-DB_USERDATA = os.getenv("DB_USERDATA")
-DB_LOGINDB = os.getenv("DB_loginDB")
 
 theme = "#191919"
 but_theme = "#191919"
@@ -37,15 +27,6 @@ tfw, tfh = win_w - (15 + sbw + sbx), 90
 mfx, mfy = sbx + sbx + sbw + 5, tfh + 15
 mfw, mfh = win_w - (15 + sbw + sbx), win_h - (20 + tfh)
 
-file_path = os.getenv('FILES_PATH')
-appdata = os.getenv('APPDATA_PATH')
-app_files_path = os.getenv('APP_FILES_PATH')
-logo_path = os.getenv('LOGO_PATH')
-qp_path = os.getenv('QP_PATH')
-user_carryover_path = os.getenv('USER_CARRYOVER_PATH')
-my_file_path = os.getenv('MY_FILE_PATH')
-fig_file_path = os.getenv('FIG_FILE_PATH')
-
 def log_out(instance):
     messagebox.showwarning("Confirm", "You sure you wanna log out?")
     instance.home_page.quit()
@@ -54,7 +35,7 @@ def log_out(instance):
         setattr(instance, attr, None)
     del instance
 
-    with open(user_carryover_path, 'w') as file:
+    with open(path_userCarryover, 'w') as file:
         pass
 
 class AppElements:
@@ -76,7 +57,7 @@ class AppElements:
             self.side_bar = ctk.CTkFrame(master=self.master, width=sbw, height=sbh, corner_radius=10,
                                          fg_color=theme, border_color=b_col, border_width=b_w)
 
-            logo_img = ctk.CTkImage(light_image=Image.open(logo_path), dark_image=Image.open(logo_path), size=(90, 90))
+            logo_img = ctk.CTkImage(light_image=Image.open(path_logo), dark_image=Image.open(path_logo), size=(90, 90))
             logo = ctk.CTkLabel(master=self.side_bar, text='', corner_radius=0, image=logo_img)
             logo.place(x=10, y=15)
 
@@ -161,12 +142,7 @@ Enjoy the process, and let’s make math an enjoyable journey!"""
             style.configure("Treeview", background="#3d3d3d", foreground="white")
             style.configure("Treeview.Heading", background="#3d3d3d", foreground="white")
 
-            mydb = msl.connect(
-                host=DB_HOST,
-                username=DB_USER,
-                password=DB_PASSWORD,
-                database=DB_USERDATA
-            )
+            mydb = msl.connect(host=db_host, port=db_port, username=db_user, password=db_password, database=db_logindb)
             cursor = mydb.cursor()
 
             cursor.execute(f"SELECT * from u_{self.uname}")
@@ -175,12 +151,7 @@ Enjoy the process, and let’s make math an enjoyable journey!"""
             columns = ['Serial', 'Graph']
 
             def double(event):
-                my_db = msl.connect(
-                    host=DB_HOST,
-                    username=DB_USER,
-                    password=DB_PASSWORD,
-                    database=DB_USERDATA
-                )
+                my_db = msl.connect(host=db_host, port=db_port, username=db_user, password=db_password, database=db_logindb)
                 cur = my_db.cursor()
 
                 item = t.selection()[0]
@@ -190,7 +161,7 @@ Enjoy the process, and let’s make math an enjoyable journey!"""
 
                 self.switch_func('Plotter')
 
-                with open(os.path.join(appdata, f"u_{self.uname}", f"{name}.pkl"), 'rb') as file:
+                with open(os.path.join(path_appdata, f"u_{self.uname}", f"{name}.pkl"), 'rb') as file:
                     fig = pickle.load(file)
 
                 self.p_master.draw_graph(fig)
@@ -313,7 +284,7 @@ Enjoy the process, and let’s make math an enjoyable journey!"""
             det['savestate'] = save_state if save_state != "" else 'n'
 
             try:
-                with open(my_file_path, "wb") as file:
+                with open(path_myFile, "wb") as file:
                     pickle.dump(det, file)
             except Exception as e:
                 print(f"Error writing to file: {e}")
@@ -321,7 +292,7 @@ Enjoy the process, and let’s make math an enjoyable journey!"""
             AppElements.PlotFrame.processor()
 
             try:
-                with open(fig_file_path, 'rb') as file:
+                with open(path_figFile, 'rb') as file:
                     fig = pickle.load(file)
 
                 if save_state == 'y':
@@ -382,12 +353,7 @@ Enjoy the process, and let’s make math an enjoyable journey!"""
         def make_ui(self):
             a = 30
 
-            mydb = msl.connect(
-                host=DB_HOST,
-                username=DB_USER,
-                password=DB_PASSWORD,
-                database=DB_LOGINDB
-            )
+            mydb = msl.connect(host=db_host, port=db_port, username=db_user, password=db_password, database=db_logindb)
             cursor = mydb.cursor()
 
             cursor.execute(f'select email from Log_Cred where u_name="{self.uname}"')
@@ -440,12 +406,7 @@ Enjoy the process, and let’s make math an enjoyable journey!"""
 
         def ask(self):
             global mail
-            mydb1 = msl.connect(
-                host=DB_HOST,
-                username=DB_USER,
-                password=DB_PASSWORD,
-                database=DB_LOGINDB
-            )
+            mydb1 = msl.connect(host=db_host, port=db_port, username=db_user, password=db_password, database=db_logindb)
             mail = simpledialog.askstring('Input', 'Enter your Mail ID')
             cursor1 = mydb1.cursor()
 
@@ -463,12 +424,7 @@ Enjoy the process, and let’s make math an enjoyable journey!"""
                 else:
                     raise ValueError
 
-                mydb1 = msl.connect(
-                    host=DB_HOST,
-                    username=DB_USER,
-                    password=DB_PASSWORD,
-                    database=DB_LOGINDB
-                )
+                mydb1 = msl.connect(host=db_host, port=db_port, username=db_user, password=db_password, database=db_logindb)
                 cursor1 = mydb1.cursor()
                 query, parameters = f'update log_cred set pw= %s where u_name=%s', (self.new_pw, self.uname)
                 cursor1.execute(query, parameters)

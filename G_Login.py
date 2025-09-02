@@ -1,13 +1,10 @@
+from config import db_port, db_user, db_password, db_logindb, db_host, path_files
 from G_Main_App_GUI import App
-from dotenv import load_dotenv
 
 import tkinter.messagebox as msg
 import mysql.connector as msc
 import tkinter
 import os
-
-
-load_dotenv()
 
 global id1
 state_var = "failed"
@@ -19,7 +16,7 @@ def login_func():
         print(f"Error in login_func: {e}")
 
     if state_var == 'success':
-        dir = os.getenv("FILES_PATH")
+        dir = path_files
         with open(os.path.join(dir, 'user_carryover.txt'), 'w') as carry:
             carry.write(id1)
         MainApp = App(id1)
@@ -32,19 +29,13 @@ def fetch_data_login():
     ID = id_get.get().strip()
     PW = pw_get.get().strip()
 
-    host = os.getenv("MS_HOST")
-    port = int(os.getenv("MS_PORT"))
-    username = os.getenv("MS_USER")
-    password = os.getenv("MS_PASSWORD")
-    db_L = os.getenv("DB_loginDB")
-
     try:
         ipw_db = msc.connect(
-            host=host,
-            port=port,
-            username=username,
-            password=password,
-            database=db_L
+            host=db_host,
+            port=db_port,
+            username=db_user,
+            password=db_password,
+            database=db_logindb
         )
         cursor = ipw_db.cursor()
         cursor.execute("select * from Log_Cred")

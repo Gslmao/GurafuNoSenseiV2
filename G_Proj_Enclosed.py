@@ -1,13 +1,10 @@
 from G_Login_GUI import AppGUI
 from G_Main_App_GUI import App
-from dotenv import load_dotenv
+from config import path_files
 
 import os
 
-load_dotenv()
-
-direct = os.getenv("FILES_PATH")
-user_carryover_path = os.path.join(direct, 'user_carryover.txt')
+user_carryover_path = os.path.join(path_files, 'user_carryover.txt')
 
 def get_logged_in_user():
     if os.path.exists(user_carryover_path):

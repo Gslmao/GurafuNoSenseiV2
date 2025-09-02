@@ -2,13 +2,8 @@ import tkinter.messagebox as msg
 import mysql.connector
 import tkinter as tk
 import os
-from dotenv import load_dotenv
 
-load_dotenv()
-host = os.getenv("MS_HOST")
-port = os.getenv("MS_PORT")
-username = os.getenv("MS_USER")
-paswd = os.getenv("MS_PASSWORD")
+from config import db_host, db_port, db_user, db_password, db_logindb, db_userdata, path_appdata
 
 def create_login():
     """
@@ -31,13 +26,11 @@ def fetch_data_newacc():
     PW = pass_get.get().strip()
     chck = re_get.get().strip()
 
-    db_L = os.getenv("DB_loginDB")
-
     if UID != "" and PW != "" and chck != "":
         if PW == chck:
             try:
                 ipw_db = mysql.connector.connect(
-                    host = host, username = username, password = paswd, database = db_L) 
+                    host = db_host, username = db_user, password = db_password, database = db_logindb) 
                 cursor = ipw_db.cursor()
 
                 cursor.execute("select * from Log_Cred")
@@ -123,11 +116,9 @@ def profile_create():
 
     No parameters.
     """
-    db_U = os.getenv("DB_USERDATA")
-    appdata_path = os.getenv("APPDATA_PATH")
-    user_dir = os.path.join(appdata_path, f"u_{UID}")
+    user_dir = os.path.join(path_appdata, f"u_{UID}")
 
-    with mysql.connector.connect(host = host, username = username, password = paswd, database = db_U) as user_db:
+    with mysql.connector.connect(host = db_host, username = db_user, password = db_password, database = db_userdata) as user_db:
         with user_db.cursor() as user_cursor:
             user_cursor.execute(f"CREATE DATABASE IF NOT EXISTS {db_U}")
 
@@ -135,7 +126,7 @@ def profile_create():
         os.rmdir(user_dir)
     os.mkdir(user_dir)
 
-    with mysql.connector.connect(host=host, port=port, user=username, password=paswd, database=db_U) as user_db:
+    with mysql.connector.connect(host = db_host, port = db_port, user = db_user, password = db_password, database=db_userdata) as user_db:
         with user_db.cursor() as cursor:
             tab_create = f"CREATE TABLE IF NOT EXISTS u_{UID} (SNum INT AUTO_INCREMENT, graphs VARCHAR(256));"
             cursor.execute(tab_create)

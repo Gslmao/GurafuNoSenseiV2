@@ -6,36 +6,22 @@ Creates the required database tables and folders for the application.
 - Creates user_data database if not present.
 - Creates files and App_Data directories if not present.
 """
-
 import mysql.connector
-import os
-from dotenv import load_dotenv
 import json
+import os
 
-load_dotenv()
-
-# Loads environment variables
-db_host = os.getenv("MS_HOST")
-db_port = int(os.getenv("MS_PORT"))
-db_user = os.getenv("MS_USER")
-db_password = os.getenv("MS_PASSWORD")
-db_logindb = os.getenv("DB_loginDB")
-db_userdata = os.getenv("DB_USERDATA")
-
-files_path = os.getenv("FILES_PATH")
-appdata_path = os.getenv("APPDATA_PATH")
+from config import db_host, db_port, db_user, db_password, db_logindb, db_userdata,  path_files, path_appdata
 
 config_data = {
-    "FILES": files_path,
-    "APPDATA": appdata_path
+    "FILES": path_files,
+    "APPDATA": path_appdata
 }
 
-# Save config data to config.json
 with open('config.json', 'w') as config_file:
     json.dump(config_data, config_file, indent=4)
 
-os.makedirs(files_path, exist_ok=True)
-os.makedirs(appdata_path, exist_ok=True)
+os.makedirs(path_files, exist_ok=True)
+os.makedirs(path_appdata, exist_ok=True)
 
 try:
     conn = mysql.connector.connect(

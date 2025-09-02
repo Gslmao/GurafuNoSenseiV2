@@ -1,17 +1,15 @@
 from multiprocessing import Queue, Process
 from F_eqn_processor import MainApp
-from dotenv import load_dotenv
+from config import path_files
 
 import matplotlib.pyplot as plt
 import pickle
 import os
 
-load_dotenv()
-
 class Helper:
     def __init__(self):
         
-        self.directory = os.getenv("FILES_PATH")
+        self.directory = path_files
 
     def eqns_state(self):
         file_path = os.path.join(self.directory, "my_file.dat")
