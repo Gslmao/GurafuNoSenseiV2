@@ -16,7 +16,6 @@ import sys
 theme = "#191919"
 but_theme = "#191919"
 canvas = "#3d3d3d"
-b_col, b_w = "#A2678A", 0
 font = ('arial', 18)
 win_w, win_h = 1200, 720
 
@@ -54,23 +53,22 @@ class AppElements:
             self.sidebar()
 
         def sidebar(self):
-            self.side_bar = ctk.CTkFrame(master=self.master, width=sbw, height=sbh, corner_radius=10,
-                                         fg_color=theme, border_color=b_col, border_width=b_w)
+            self.side_bar = ctk.CTkFrame(master=self.master, width=sbw, height=sbh, corner_radius=10, fg_color=theme)
 
             logo_img = ctk.CTkImage(light_image=Image.open(path_logo), dark_image=Image.open(path_logo), size=(90, 90))
-            logo = ctk.CTkLabel(master=self.side_bar, text='', corner_radius=0, image=logo_img)
+            logo     = ctk.CTkLabel(master=self.side_bar, text='', image=logo_img)
             logo.place(x=10, y=15)
 
-            self.home = Buttons(master=self.side_bar, text='Home', command=lambda: self.switch_command('Home'),
-                                font=('Segoe UI', 21))
-            self.graph = Buttons(master=self.side_bar, text='Plotter', command=lambda: self.switch_command('Plotter'),
-                                 font=('Segoe UI', 21))
-            self.account = Buttons(master=self.side_bar, text='Account',
-                                   command=lambda: self.switch_command('Accounts'), font=('Segoe UI', 21))
-            self.logout = Buttons(master=self.side_bar, text='Log Out', command=lambda: log_out(self.AppInst),
-                                  font=('Segoe UI', 21))
-            self.exit = Buttons(master=self.side_bar, text='Exit', command=lambda: self.AppInst.exit(),
-                                font=('Segoe UI', 21))
+            self.home       = Buttons(master=self.side_bar, text='Home',
+                                      command=lambda: self.switch_command('Home'), font=('Segoe UI', 21))
+            self.graph      = Buttons(master=self.side_bar, text='Plotter',
+                                      command=lambda: self.switch_command('Plotter'), font=('Segoe UI', 21))
+            self.account    = Buttons(master=self.side_bar, text='Account',
+                                      command=lambda: self.switch_command('Accounts'), font=('Segoe UI', 21))
+            self.logout     = Buttons(master=self.side_bar, text='Log Out', 
+                                      command=lambda: log_out(self.AppInst), font=('Segoe UI', 21))
+            self.exit       = Buttons(master=self.side_bar, text='Exit',
+                                      command=lambda: self.AppInst.exit(), font=('Segoe UI', 21))
 
             self.home.place(x=10, y=135)
             self.graph.place(x=10, y=135+65)
@@ -91,9 +89,9 @@ class AppElements:
 
         def top_bar(self):
             self.top_frame = ctk.CTkFrame(master=self.master, width=tfw, height=tfh, fg_color=theme,
-                                          corner_radius=10, border_color=b_col, border_width=b_w)
+                                          corner_radius=10)
             self.home_header = ctk.CTkLabel(master=self.top_frame, text=self.home_title, width=20, height=50,
-                                            corner_radius=5, font=('Inter', 38.5), text_color="white")
+                                            corner_radius=100, font=('Inter', 38.5), text_color="white")
 
             self.top_frame.place(x=tfx, y=tfy)
             self.home_header.place(relx=0.5, rely=0.5, anchor='center')
@@ -121,11 +119,11 @@ Enjoy the process, and let’s make math an enjoyable journey!"""
 
         def main(self):
             text_fnt = ("Courier New", 19.5)
-            self.main_frame = ctk.CTkFrame(master=self.master, width=mfw, height=mfh, fg_color=theme, corner_radius=10, border_color=b_col, border_width=b_w)
+            self.main_frame = ctk.CTkFrame(master=self.master, width=mfw, height=mfh, fg_color=theme, corner_radius=10)
 
-            intro_lbl = ctk.CTkTextbox(master=self.main_frame, wrap='word', width=580, height=480, font=text_fnt, fg_color=theme)
-            saved = ctk.CTkLabel(master=self.main_frame, width=300, height=20, font=text_fnt, fg_color=theme, text='The Graphs You\'ve Saved')
-            open_graph = ctk.CTkLabel(master=self.main_frame, width=300, text='Double Click to Open!!', height=20, font=text_fnt, fg_color=theme)
+            intro_lbl  = ctk.CTkTextbox(master=self.main_frame, width=580, height=480, wrap='word', font=text_fnt, fg_color=theme)
+            saved      = ctk.CTkLabel(master=self.main_frame, width=300, height=20, font=text_fnt, fg_color=theme, text='The Graphs You\'ve Saved')
+            open_graph = ctk.CTkLabel(master=self.main_frame, width=300, height=20, text='Double Click to Open!!', font=text_fnt, fg_color=theme)
 
             intro_lbl.insert('1.0', self.intro)
 
@@ -193,7 +191,7 @@ Enjoy the process, and let’s make math an enjoyable journey!"""
             self.save_var = tk.StringVar()
 
             self.main_frame = ctk.CTkFrame(master=self.master, width=mfw, height=win_h - 10, fg_color=theme,
-                                           corner_radius=10, border_color=b_col, border_width=b_w)
+                                           corner_radius=10)
 
             self.three = ctk.CTkSegmentedButton(master=self.main_frame, values=['Plot Graphs', 'Differentiation', 'Integration'],
                                                 command=self.toggle, width=300, height=50)
@@ -362,30 +360,30 @@ Enjoy the process, and let’s make math an enjoyable journey!"""
             text_font = ("Arial", 20, 'italic')
 
             self.page_top = AppElements.TopBar(self.master, 'Accounts')
-            self.main_frame = ctk.CTkFrame(master=self.master, width=mfw, height=mfh, fg_color=theme, corner_radius=10, border_color=b_col, border_width=b_w)
+            self.main_frame = ctk.CTkFrame(master=self.master, width=mfw, height=mfh, fg_color=theme, corner_radius=10)
 
             draw_canvas = tk.Canvas(self.main_frame, width=880, height=mfh, bg='#191919', bd=0, highlightthickness=0)
             draw_canvas.place(x=174, y=0)
             draw_canvas.create_line(0, 38, 879, 38, fill='#3d3d3d', width=4)
             draw_canvas.create_line(30, 325-a, 879, 325-a, fill='#3d3d3d', width=4)
 
-            general = ctk.CTkLabel(self.main_frame, text='General', font=('Inter', 28, 'italic', 'bold'))
-            name = ctk.CTkLabel(self.main_frame, text=f'Name\t\t - {self.uname}', font=font_inter)
+            general      = ctk.CTkLabel(self.main_frame, text='General', font=('Inter', 28, 'italic', 'bold'))
+            name         = ctk.CTkLabel(self.main_frame, text=f'Name\t\t - {self.uname}', font=font_inter)
             self.mail_id = ctk.CTkLabel(self.main_frame, text=f'Mail ID (Optional)\t - {mail_id if mail_id is not None else "NULL"}', font=font_inter)
 
             if mail_id is None:
                 self.addmail = ctk.CTkButton(self.main_frame, text='Add Mail ID', command=lambda: self.ask())
                 self.addmail.place(x=30 + 300, y=110)
 
-            reset_pw = Buttons(master=self.main_frame, width=40, height=20, text='Forgot Password?', font=font_inter,
-                               command=self.change_pw)
             user_d = ctk.CTkLabel(self.main_frame, text='User Data', font=('Inter', 28, 'italic', 'bold'))
 
-            import_data = Buttons(master=self.main_frame, width=40, height=20, text='Import Data', font=font_inter,
+            reset_pw    = Buttons(master=self.main_frame, font=font_inter, text='Forgot Password?',
+                                  command=self.change_pw)
+            import_data = Buttons(master=self.main_frame, font=font_inter, text='Import Data',
                                   command=lambda: import_util(self.uname))
-            export_data = Buttons(master=self.main_frame, width=40, height=20, text='Export Data', font=font_inter,
+            export_data = Buttons(master=self.main_frame, font=font_inter, text='Export Data',
                                   command=lambda: export(self.uname))
-            delete_data = Buttons(master=self.main_frame, width=40, height=20, text='Clear Data', font=font_inter,
+            delete_data = Buttons(master=self.main_frame, font=font_inter, text='Clear Data', 
                                   command=lambda: [clear(self.uname), self.inst.home.fetch_tables()])
 
             label = ctk.CTkLabel(master=self.main_frame, text='GNS Version 2.0.0', text_color='#3d3d3d', font=text_font,
@@ -393,7 +391,7 @@ Enjoy the process, and let’s make math an enjoyable journey!"""
 
             import_data.place(x=30, y=355-a)
             export_data.place(x=30, y=415-a)
-            delete_data.place(x=30, y=475 - a)
+            delete_data.place(x=30, y=475-a)
 
             label.place(relx=0.825, rely=0.935)
             reset_pw.place(x=30, y=535 - a)
@@ -433,12 +431,12 @@ Enjoy the process, and let’s make math an enjoyable journey!"""
                 pw_frame.destroy()
                 messagebox.showinfo('Information', "Password Changed")
 
-            pw_frame = ctk.CTkFrame(master=self.main_frame, width=390, height=180, fg_color=theme)
-            pw_new_a = ctk.CTkEntry(master=pw_frame, width=280, height=40)
-            pw_new_b = ctk.CTkEntry(master=pw_frame, width=280, height=40)
-            cancel = ctk.CTkButton(master=pw_frame, width=30, height=30, text='X', command=pw_frame.destroy)
-            get_but = ctk.CTkButton(master=pw_frame, width=135, height=30, text='Change Password',
-                                    command=lambda: fetch_change())
+            pw_frame    = ctk.CTkFrame(master=self.main_frame, width=390, height=180, fg_color=theme)
+            pw_new_a    = ctk.CTkEntry(master=pw_frame, width=280, height=40)
+            pw_new_b    = ctk.CTkEntry(master=pw_frame, width=280, height=40)
+            cancel      = ctk.CTkButton(master=pw_frame, width=30, height=30, text='X', command=pw_frame.destroy)
+            get_but     = ctk.CTkButton(master=pw_frame, width=135, height=30, text='Change Password', 
+                                        command=lambda: fetch_change())
 
             pw_new_a.place(x=0, y=0)
             pw_new_b.place(x=0, y=60)
@@ -448,46 +446,22 @@ Enjoy the process, and let’s make math an enjoyable journey!"""
 
 class Buttons(ctk.CTkButton):
     def __init__(self, **kwargs):
-        self.corner_rad = kwargs.get("corner_radius", 0)
-        self.anchor = kwargs.get('anchor', 'center')
-        self.command = kwargs.get('command', None)
-        self.border = kwargs.get('border', True)
-        self.image = kwargs.get('image', None)
-        self.font = kwargs.get('font', None)
-        self.fore = kwargs.get('fgc', None)
-        self.w = kwargs.get('width', 90)
-        self.h = kwargs.get('height', 50)
-        self.master = kwargs.get('master')
-        self.text = kwargs.get('text')
+        self.command    = kwargs.get('command', None)
+        self.font       = kwargs.get('font', None)
+        self.master     = kwargs.get('master')
+        self.text       = kwargs.get('text')
 
-        super().__init__(master=self.master, width=self.w, height=self.h, text=self.text, font=font, bg_color=theme,
-                         fg_color=theme, text_color="#c1c1c1", border_width=b_w, border_color="#976E6E",
-                         anchor=self.anchor, image=self.image)
-
-        self.check_attr()
-        self.change_color()
-
-    def check_attr(self):
-        if self.border:
-            self.configure(width=90, height=50, font=font, bg_color=theme,
-                           text_color="#c1c1c1", border_width=b_w, border_color="#976E6E")
-        else:
-            self.configure(width=90, height=50, font=font, bg_color=theme,
-                           text_color="white", border_width=0, border_color='')
+        super().__init__(master=self.master, width=90, height=50, text=self.text, font=font, bg_color=theme,
+                         fg_color=theme, text_color="#c1c1c1")
 
         if self.command and callable(self.command):
             self.configure(command=self.command)
         else:
             pass
-
-        if self.font:
-            self.configure(font=self.font)
-        else:
-            pass
-
-    def change_color(self):
+        
         self.bind("<Enter>", lambda e: self.configure(fg_color="#2c2c2c"))
         self.bind("<Leave>", lambda e: self.configure(fg_color=theme))
+
 
 class App:
     def __init__(self, username):

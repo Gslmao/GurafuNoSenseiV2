@@ -120,7 +120,7 @@ def profile_create():
 
     with mysql.connector.connect(host = db_host, username = db_user, password = db_password, database = db_userdata) as user_db:
         with user_db.cursor() as user_cursor:
-            user_cursor.execute(f"CREATE DATABASE IF NOT EXISTS {db_U}")
+            user_cursor.execute(f"CREATE DATABASE IF NOT EXISTS {db_userdata}")
 
     if os.path.exists(user_dir):
         os.rmdir(user_dir)

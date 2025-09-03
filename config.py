@@ -2,6 +2,7 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 
+path_cwd = os.getenv("PATH_CWD")
 path_files = os.getenv("PATH_FILES")
 path_appdata = os.getenv("PATH_APPDATA")
 path_appFiles = os.getenv("PATH_APP_FILES")

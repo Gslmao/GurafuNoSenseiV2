@@ -25,18 +25,18 @@ def login_func():
         pass
 
 def fetch_data_login():
+    def exit_app():
+        LoginWin.destroy()
+        LoginWin.quit()
+        cursor.close()
+        ipw_db.close()
+
     global state_var
     ID = id_get.get().strip()
     PW = pw_get.get().strip()
 
     try:
-        ipw_db = msc.connect(
-            host=db_host,
-            port=db_port,
-            username=db_user,
-            password=db_password,
-            database=db_logindb
-        )
+        ipw_db = msc.connect(host=db_host, port=db_port, username=db_user, password=db_password, database=db_logindb)
         cursor = ipw_db.cursor()
         cursor.execute("select * from Log_Cred")
         creds = cursor.fetchall()
@@ -48,26 +48,18 @@ def fetch_data_login():
         for i in creds:
             if ID == i[0]:
                 if PW == i[1]:
+
                     msg.showinfo("", "Login Successful")
                     state_var = "success"
-                    LoginWin.destroy()
-                    LoginWin.quit()
-                    cursor.close()
-                    ipw_db.close()
+                    exit_app()
                     return ID, PW
                 else:
                     msg.showwarning("Error", "Wrong Password!, Exiting...")
-                    LoginWin.destroy()
-                    LoginWin.quit()
-                    cursor.close()
-                    ipw_db.close()
+                    exit_app()
                     return 0, 0
         else:
             msg.showwarning("Error", "User ID doesn't Exist")
-            LoginWin.destroy()
-            LoginWin.quit()
-            cursor.close()
-            ipw_db.close()
+            exit_app()
     else:
         msg.showwarning("Error", "Any entry cant be Empty")
 
