@@ -1,4 +1,4 @@
-from config import db_host, db_user, db_password, db_logindb, db_userdata, path_appdata, path_logo, path_userCarryover, path_myFile, path_figFile
+from config import db_host, db_user, db_password, db_logindb, db_userdata, db_port, path_appdata, path_logo, path_userCarryover, path_myFile, path_figFile
 from matplotlib.backends.backend_tkagg import NavigationToolbar2Tk, FigureCanvasTkAgg
 from F_FuncLib import save_graph, export, clear, import_util
 from tkinter import ttk, font, simpledialog, messagebox
@@ -142,7 +142,7 @@ Enjoy the process, and let’s make math an enjoyable journey!"""
             style.configure("Treeview", background="#3d3d3d", foreground="white")
             style.configure("Treeview.Heading", background="#3d3d3d", foreground="white")
 
-            mydb = msl.connect(host=db_host, port=db_port, username=db_user, password=db_password, database=db_logindb)
+            mydb = msl.connect(host=db_host, port=db_port, username=db_user, password=db_password, database=db_userdata)
             cursor = mydb.cursor()
 
             cursor.execute(f"SELECT * from u_{self.uname}")
