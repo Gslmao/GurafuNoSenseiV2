@@ -142,7 +142,7 @@ Enjoy the process, and let’s make math an enjoyable journey!"""
             style.configure("Treeview", background="#3d3d3d", foreground="white")
             style.configure("Treeview.Heading", background="#3d3d3d", foreground="white")
 
-            mydb = msl.connect(host=db_host, port=db_port, username=db_user, password=db_password, database=db_logindb)
+            mydb = msl.connect(host=db_host, port=db_port, username=db_user, password=db_password, database=db_userdata)
             cursor = mydb.cursor()
 
             cursor.execute(f"SELECT * from u_{self.uname}")
